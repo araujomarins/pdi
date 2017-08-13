@@ -72,7 +72,7 @@ imtool close all; close all;
 
 %% Exercício I.2 - A
 
-gray_min = 0;
+gray_min = 0;   
 gray_max = 1;
 img_size = 256;
 nb_columns = 7;
