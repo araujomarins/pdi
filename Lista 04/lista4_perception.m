@@ -34,17 +34,41 @@ echo on;
 %                           Exercício I.1
 % =======================================================================
 %
-%
-%
+% O exercício explora o contraste simultâneo, onde temos um quadrado cinza
+% envolto de branco e envolto de preto. Percebemos o cinza mais claro no
+% segundo em relação ao primeiro, portanto não notaremos os cinzas iguais 
+% para valores centrais iguais a 0.5, como era de se esperar. Utilizando
+% 0.55 podemos notar que é suficiente para percebermos os quadrados com
+% igual itensidade.
+
 echo off;
 pause; close all;
 
 
 cont_sim2;
+echo on;
+%
+% Aqui temos mais um exemplo de como a tonalidade do cinza é interpretada
+% diferente de acordo com o meio em que o objeto está inserido. Quando as
+% duas partes estão unidas, entendemos que os arcos formam um único objeto
+% e por isso conseguimos interpretar com um único tom de cinza. Já nos
+% demais casos, os arcos separados são entendidos como objetos diferentes
+% imesrsos em "meios" com tons de cinza diferentes ao redor, e no entanto
+% temos a sensação de terem tons de cinza diferentes (apesar de podermos
+% conferir o valor dos pixels e ver que são iguais).
+echo off;
+pause;
+
 checkershadow;
-
-imtool; close all;
-
+echo on;
+%
+% Mais um exemplo que se explica da mesma forma que o exemplo dos arcos. Os
+% pontos A e B estão cercados de tons de cinza diferentes, e portanto
+% achamos que possuem tons de cinza próximos do seu redor (apesar de
+% podermos verificar que possuem o mesmo valor).
+echo off;
+pause;
+imtool close all; close all; 
 
 %% Exercício I.2 - A
 
@@ -98,7 +122,10 @@ echo on;
 %                           Exercício I.2 - A
 % =======================================================================
 %
-%
+% A figura representa 7 barras verticais com mesmo valor em cada barra,
+% como solicitado no problema. No entanto, ao observarmos a imagem das
+% barras, notas que dentro de cada barra temos a sensação de que ela vai
+% clareando conformes andando para a direita.
 %
 echo off;
 pause; close all;
@@ -117,17 +144,27 @@ img = img(:, 1:img_size);
 
 figure;
 
+subplot(2,1,1);
 imshow(img/255); colormap(gray);
-title(['Total de colunas = ', num2str(nb_columns)]);
+title(['Imagem sozinha - Total de colunas = ', num2str(nb_columns)]);
 
-set(gcf,'units','points','position',[0,0,300,300])
+subplot(2,1,2);
+imshow([img, img]/255); colormap(gray);
+title(['Imagem concatenada - Total de colunas = ', num2str(nb_columns)]);
+
+set(gcf,'units','points','position',[0,0,500,800])
 
 echo on;
 % =======================================================================
 %                           Exercício I.2 - B
 % =======================================================================
 %
-%
+% Na primeira imagem, em que temos apenas uma cópia, praticamente não
+% notamos a diferença entre todas as barras, interpretando elas como um
+% único tom de cinza. Isso se dá pelo fato de cobrirmos uma faixa pequena
+% de tons de cinza e também por irmos variando esse tom sempre bem
+% suavemente. Agora na segunda imagem, podemos notar uma transição rápida,
+% do último valor para o primeiro.
 %
 echo off;
 pause; close all;
@@ -157,7 +194,10 @@ echo on;
 %                           Exercício I.2 - C
 % =======================================================================
 %
-%
+% Esse exemplo é uma extensão do item I.2 - A, das bandas de Mach. Aqui
+% temos o mesmo efeito nos lados dos quadrados (tanto horizontal quanto
+% vertical), já nas quinas esses efeitos são potencializados uma vez que
+% são nessas posições em que esses efeitos estão sendo somados.
 %
 echo off;
 pause; close all;
@@ -321,11 +361,43 @@ echo on;
 %                           Exercício II.1
 % =======================================================================
 %
-%
-%
+% Notamos que o Y controla de fato o brilho da imagem, onde diminuindo o
+% seu valor a imagem fica mais escura. Conforme nos afastamos do centro da
+% imagem estamos caminhando apra misturas com maiores proporções de
+% vermelho e azul (de acordo com a direção).
 echo off;
 pause; close all;
 
 %% Exercício II.2
 
 img = imread('');
+
+Observando os exemplos, notamos que o filtro (que é basicamente um blur 
+aplicado a imagem) afeta bastante a nitidez da imagem quando aplicado na 
+luminancia. Isso se dá uma vez que o Y é a componente que carrega as informaçoes 
+de transicao da imagem, então, ao borrarmos essa matriz, causamos distorcoes 
+na imagem, dificultando a sua compreensao. Esse mesmo filtro, ao ser aplicado 
+nas crominancias causa mudanca quase nula na imagem gerada (apenas nas bordas), 
+o que nos diz que essas matrizes de crominancia carregam menos informacoes que 
+a Y.
+
+Esse exemplo é uma boa justificativa de utilizarmos o sistema YCbCr para representar 
+uma cor, uma vez que Cb e Cr carregam poucas informaçoes (nao irrelevante, no 
+entanto), fazendo com que suas transmissoes sejam faciulitadas em relacao a 
+outros sistemas.
+
+O efeito do sigma ao quadrado pode ser visto ao observarmos a forma do filtro, 
+ele vai se tornando menos seletivo, pegando mais valores ao redor do pixel 
+para fazer o borrão.
+
+
+Temos uma diferenca clara ao colocarmos todas as representações lado a lado.
+No caso do RGB todas as suas componentes são bem detalhadas, podemos notar que 
+a maioria dos detalhes esta presente em mais de uma das componentes. É de se 
+esperar que seja mais custoso e menos eficiente transmitir a imagem atraves 
+dessas componentes.
+
+Agora no caso Ycbcr e YIQ nota-se que a componente Y é rica de detalhes, 
+mas as demais carregam menos informação, sendo menos redundante. No caso da
+YIQ esse efeito é ainda mais presente, temos a componente Q praticamente nula, 
+fazendo desse sistema um melhor candidato para a representacao.
